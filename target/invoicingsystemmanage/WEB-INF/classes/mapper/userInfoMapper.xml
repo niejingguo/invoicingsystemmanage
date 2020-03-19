@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kgc.hz.dao.UserInfoDao">
+    <resultMap id="userInfoMap" type="UserInfo">
+        <result property="id" column="id"/>
+        <result property="userName" column="userName"/>
+        <result property="password" column="password"/>
+        <result property="realName" column="realName"/>
+        <association property="role" javaType="Role">
+            <result property="roleName" column="name"/>
+        </association>
+    </resultMap>
+
+    <select id="getUserInfo" resultMap="userInfoMap" parameterType="UserInfo">
+    SELECT u.id,u.userName,u.`password`,u.realName,r.`name`
+    FROM users u
+	INNER JOIN role_user ru ON u.id = ru.userId
+	INNER JOIN role r ON ru.roleId = r.id
+	where username=#{userName}
+	and password=#{password}
+    </select>
+</mapper>

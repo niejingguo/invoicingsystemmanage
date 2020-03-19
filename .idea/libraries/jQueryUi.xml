@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="jQueryUi" type="javaScript">
+    <properties>
+      <option name="frameworkName" value="jQuery" />
+      <option name="frameworkVersion" value="1.8.3" />
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/src/main/webapp/static/js/jquery-1.8.3.min.js" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

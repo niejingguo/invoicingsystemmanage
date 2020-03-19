@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.hz.dao.SaleDao">
+    <select id="getProList" resultType="Product">
+        select * from product
+    </select>
+    <!--添加销售记录-->
+    <insert id="addSaleReCord" parameterType="Sale">
+        insert into sale (price,quantity,totalPrice,userId,productId,saleDate)
+        VALUES (#{price},#{quantity},#{totalPrice},#{userId},#{productId},NOW());
+    </insert>
+    <!--修改商品库存-->
+    <update id="updateProduct" parameterType="Product">
+        update product set quantity=quantity-#{quantity}
+        where id=#{id}
+    </update>
+    <!--查看商品库存-->
+    <select id="selectProduct" resultType="int">
+        select quantity from product where id=#{id}
+    </select>
+    <!--分页查询销售记录-->
+    <select id="getSalePage" parameterType="SaleParameter" resultType="Sale">
+        SELECT s.id,s.price,s.quantity,s.saleDate,s.totalPrice,u.userName,p.productName
+        FROM sale s INNER JOIN users u on s.userId=u.id
+        inner join product p on p.id=s.productId
+        <where>
+            <if test="userName!=null and userName!='聂景国'">
+                u.userName=#{userName}
+            </if>
+        </where>
+        ORDER BY
+        <if test="orderBy!=null and orderBy!=''">
+            ${orderBy}
+            <if test="orderType!=null and orderType!=''">
+                ${orderType}
+            </if>
+        </if>
+        <if test="orderBy==null or orderBy==''">
+            s.saleDate desc
+        </if>
+        limit #{pageIndex},#{pageSize}
+    </select>
+
+    <select id="getSaleCount" parameterType="SaleParameter" resultType="int">
+        select count(s.id)
+        from sale s inner join users u on s.userId=u.id
+        inner join product p on p.id=s.productId
+        <where>
+            <if test="userName!=null and userName!='聂景国'">
+                u.userName=#{userName}
+            </if>
+        </where>
+    </select>
+    <!--物理删除-->
+    <delete id="delSale">
+        delete from sale where id=#{id}
+    </delete>
+</mapper>
